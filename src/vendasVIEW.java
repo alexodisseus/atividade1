@@ -1,3 +1,7 @@
+
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -14,6 +18,7 @@ public class vendasVIEW extends javax.swing.JFrame {
      */
     public vendasVIEW() {
         initComponents();
+        carregarProdutosVendidos();
     }
 
     /**
@@ -129,6 +134,27 @@ public class vendasVIEW extends javax.swing.JFrame {
                 new vendasVIEW().setVisible(true);
             }
         });
+    }
+    private void carregarProdutosVendidos() {
+
+        ProdutosDAO produtosdao = new ProdutosDAO();
+
+
+        ArrayList<ProdutosDTO> listagemVendidos = produtosdao.listarProdutosVendidos();
+
+
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setRowCount(0); 
+
+
+        for (ProdutosDTO produto : listagemVendidos) {
+            model.addRow(new Object[]{
+                produto.getId(),
+                produto.getNome(),
+                produto.getValor(),
+                produto.getStatus()
+            });
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
