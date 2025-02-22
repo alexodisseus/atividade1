@@ -23,26 +23,35 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
-    public void cadastrarProduto (ProdutosDTO produto){
+    public boolean cadastrarProduto(ProdutosDTO produto) {
         conn = new conectaDAO().connectDB(); 
-        if (conn != null) {
-            try {
+        PreparedStatement prep = null;
+        try {
+            conn = new conectaDAO().connectDB(); 
+            if (conn != null) {
+
                 String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
-                PreparedStatement prep = conn.prepareStatement(sql);
+                prep = conn.prepareStatement(sql);
                 prep.setString(1, produto.getNome()); 
                 prep.setInt(2, produto.getValor());   
                 prep.setString(3, produto.getStatus());
-                prep.executeUpdate(); 
-            } catch (SQLException erro) {
+                int rowsAffected = prep.executeUpdate(); 
+
+                return rowsAffected > 0;
+            }
+
+        } catch (SQLException erro) {
+            // Tratamento de erro 
+        } finally {
+
+            try {
+                if (prep != null) prep.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
                 // Tratamento de erro 
-            } finally {
-                try {
-                    if (conn != null) conn.close();
-                } catch (SQLException e) {
-                    // Tratamento de erro 
-                }
             }
         }
+        return false; 
         
         
     }
