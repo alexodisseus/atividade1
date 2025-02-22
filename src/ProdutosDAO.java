@@ -55,6 +55,35 @@ public class ProdutosDAO {
         
         
     }
+    public boolean venderProduto(int id) {
+        Connection conn = null;
+        PreparedStatement prep = null;
+
+        try {
+            conn = new conectaDAO().connectDB(); 
+            if (conn != null) {
+
+                String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+                prep = conn.prepareStatement(sql);
+                prep.setInt(1, id); 
+                int rowsAffected = prep.executeUpdate(); 
+
+
+                return rowsAffected > 0;
+            }
+        } catch (SQLException erro) {
+            // Tratamento de erro 
+        } finally {
+
+            try {
+                if (prep != null) prep.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                // Tratamento de erro 
+            }
+        }
+        return false; 
+    }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
         
